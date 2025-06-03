@@ -59,7 +59,18 @@ class Game:
 		return last_hole
 
 	def steal_from_opponent(self, last_hole, current_player_id):
-		return
+		last_hole_index = self.board.all_holes.index(last_hole)
+		opposite_index = 2 * self.player_side_length - last_hole_index
+		opposite_hole = self.board.all_holes[opposite_index]
+		
+		if opposite_hole.owner_id == current_player_id or opposite_hole.stone_amount == 0:
+			return
+		
+		total_stones = last_hole.stone_amount + opposite_hole.stone_amount
+		last_hole.stone_amount = 0
+		opposite_hole.stone_amount = 0
+		
+		self.board.player_territories[current_player_id].player_mancala.stone_amount += total_stones
 
 	def draw_board(self):
 		top_row_str = [f"{hole.stone_amount:02d}" for hole in self.board.player_territories[1].player_side[::-1]]
