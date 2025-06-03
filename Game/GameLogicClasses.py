@@ -41,14 +41,22 @@ class Game:
 		return selected_hole.stone_amount > 0
 
 	def remove_stones_from_hole(self, selected_hole):
-		return
+		stones_removed = selected_hole.stone_amount
+		selected_hole.stone_amount = 0
+		return stones_removed
 
 	def get_next_hole(self, selected_hole):
 		current_index = self.board.all_holes.index(selected_hole)
 		return self.board.all_holes[current_index + 1]
 
 	def pass_stones_around(self, stone_amount, next_hole):
-		return
+		last_hole = next_hole
+		while stone_amount > 0:
+			next_hole.stone_amount += 1
+			stone_amount -= 1
+			last_hole = next_hole
+			next_hole = self.get_next_hole(next_hole)
+		return last_hole
 
 	def steal_from_opponent(self, last_hole, current_player_id):
 		return
