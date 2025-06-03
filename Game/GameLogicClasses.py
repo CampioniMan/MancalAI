@@ -14,12 +14,13 @@ class Game:
 	### Returns True when the current player should keep playing afterwards
 	def play_round(self):
 		play = self.players[self.current_player_id].play(self.board)
+		if not self.is_valid(play):
+			print("Errou parça")
+			return True
+		play = int(play)
 
 		# Traduzir o número pra qual buraco vamos usar
 		selected_hole = self.board.player_territories[self.current_player_id].player_side[play - 1]
-		if not self.is_valid(play, selected_hole):
-			print("Errou parça")
-			return True
 		# Zerar pedrinhas do primeiro
 		stone_amount = self.remove_stones_from_hole(selected_hole)
 		# Ir passando 1 por 1 (pular o mancala oponente) adicionando essa quantidade que tinha
@@ -48,10 +49,13 @@ class Game:
 				moves.append(i)
 		return moves
 
-	def is_valid(self, play_number, selected_hole):
+	def is_valid(self, play_number):
+		if play_number is None or not play_number.isdigit():
+			return False
+		play_number = int(play_number)
 		if play_number < 1 or play_number > self.player_side_length:
 			return False
-		return selected_hole.stone_amount > 0
+		return self.board.player_territories[self.current_player_id].player_side[play_number - 1].stone_amount > 0
 
 	def remove_stones_from_hole(self, selected_hole):
 		stones_removed = selected_hole.stone_amount
@@ -65,6 +69,9 @@ class Game:
 	def pass_stones_around(self, stone_amount, next_hole):
 		last_hole = next_hole
 		while stone_amount > 0:
+			if next_hole.is_mancala and next_hole.owner_id != self.current_player_id:
+				next_hole = self.get_next_hole(next_hole)
+				continue
 			next_hole.stone_amount += 1
 			stone_amount -= 1
 			last_hole = next_hole
@@ -96,3 +103,15 @@ class Game:
 		print("|    --- " + " --- ".join(bottom_row_str) + " ---    |")
 		return
 
+	def print_winner(self):
+		player_01_score = self.board.player_territories[0].player_mancala.stone_amount
+		player_02_score = self.board.player_territories[1].player_mancala.stone_amount
+		print ("Game Over!")
+		print(f"Player 1 Score: {player_01_score}")
+		print(f"Player 2 Score: {player_02_score}")
+		if player_01_score > player_02_score:
+			print("Player 1 wins!")
+		elif player_02_score > player_01_score:
+			print("Player 2 wins!")
+		else:
+			print("It's a tie!")

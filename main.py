@@ -10,3 +10,4 @@ if __name__ == '__main__':
     while not game.board.has_ended():
         game.draw_board()
         game.play_round()
+    game.print_winner()
