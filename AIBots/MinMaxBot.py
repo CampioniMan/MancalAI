@@ -1,13 +1,14 @@
 from Game.GameLogicClasses import Game
 from Game.GameDataClasses import BoardData
+from Game.Player import Player
 
 
-class MinMaxBot:
+class MinMaxBot(Player):
     def __init__(self, bot_player_id):
         self.max_depth = 8
         self.maximizing_player_id = bot_player_id
 
-    def get_next_action(self, board):
+    def play(self, board):
         return self.minimax(board, 0, True)
 
     def minimax(self, board, current_depth, current_player_id):
@@ -16,14 +17,14 @@ class MinMaxBot:
 
         if current_player_id == self.maximizing_player_id:
             best_score = -float('inf')
-            for move in board.get_possible_moves(self.maximizing_player_id):
+            for move in Game.get_possible_moves(board, self.maximizing_player_id):
                 new_board = self.make_move(board, move)
                 score = self.minimax(new_board, current_depth + 1, Game.get_next_player_id(current_player_id))
                 best_score = max(best_score, score)
             return best_score
         else:
             best_score = float('inf')
-            for move in board.get_possible_moves(current_player_id):
+            for move in Game.get_possible_moves(board, current_player_id):
                 new_board = self.make_move(board, move)
                 score = self.minimax(new_board, current_depth + 1, Game.get_next_player_id(current_player_id))
                 best_score = min(best_score, score)

@@ -4,45 +4,47 @@ from Game.GameDataClasses import BoardData
 class Game:
 	PLAYER_COUNT = 2
 
-	def __init__(self):
+	def __init__(self, player_01, player_02):
+		self.players = [player_01, player_02]
 		self.current_player_id = 0
 		self.player_side_length = 6
 		self.initial_stone_amount_per_hole = 4
 		self.board = BoardData(self.player_side_length, self.initial_stone_amount_per_hole)
 
-	def loop(self):
-		while not self.board.has_ended():
-			self.draw_board()
-			play = int(input())  # 1
+	### Returns True when the current player should keep playing afterwards
+	def play_round(self):
+		play = self.players[self.current_player_id].play(self.board)
 
-			# Traduzir o número pra qual buraco vamos usar
-			selected_hole = self.board.player_territories[self.current_player_id].player_side[play - 1]
-			if not self.is_valid(play, selected_hole):
-				print("Errou parça")
-				continue
-			# Zerar pedrinhas do primeiro
-			stone_amount = self.remove_stones_from_hole(selected_hole)
-			# Ir passando 1 por 1 (pular o mancala oponente) adicionando essa quantidade que tinha
-			next_hole = self.get_next_hole(selected_hole)
-			last_hole = self.pass_stones_around(stone_amount, next_hole)
-			# Se parar no seu mancala, joga de novo
-			if last_hole.is_mancala:
-				continue
-			# Se parar num vazio, pega o atual e o espelhado do outro lado e soma no mancala
-			if last_hole.stone_amount == 1:
-				self.steal_from_opponent(last_hole, self.current_player_id)
+		# Traduzir o número pra qual buraco vamos usar
+		selected_hole = self.board.player_territories[self.current_player_id].player_side[play - 1]
+		if not self.is_valid(play, selected_hole):
+			print("Errou parça")
+			return True
+		# Zerar pedrinhas do primeiro
+		stone_amount = self.remove_stones_from_hole(selected_hole)
+		# Ir passando 1 por 1 (pular o mancala oponente) adicionando essa quantidade que tinha
+		next_hole = self.get_next_hole(selected_hole)
+		last_hole = self.pass_stones_around(stone_amount, next_hole)
+		# Se parar no seu mancala, joga de novo
+		if last_hole.is_mancala:
+			return True
+		# Se parar num vazio, pega o atual e o espelhado do outro lado e soma no mancala
+		if last_hole.stone_amount == 1:
+			self.steal_from_opponent(last_hole, self.current_player_id)
 
-			self.current_player_id = self.get_next_player_id(self.current_player_id)
+		self.current_player_id = self.get_next_player_id(self.current_player_id)
+		return False
 
 	@staticmethod
 	def get_next_player_id(player_id):
 		return (player_id + 1) % Game.PLAYER_COUNT
 
-	def get_possible_moves(self, player_id):
+	@staticmethod
+	def get_possible_moves(board, player_id):
 		moves = []
-		for i in range(0, self.player_side_length):
-			hole = self.board.player_territories[player_id].player_side[i]
-			if self.is_valid(i, hole):
+		for i in range(0, len(board.player_territories[player_id].player_side)):
+			hole = board.player_territories[player_id].player_side[i]
+			if hole.stone_amount > 0:
 				moves.append(i)
 		return moves
 
