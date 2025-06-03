@@ -2,20 +2,21 @@ from Game.GameDataClasses import BoardData
 
 
 class Game:
+	PLAYER_COUNT = 2
+
 	def __init__(self):
-		self.player_count = 2
+		self.current_player_id = 0
 		self.player_side_length = 6
 		self.initial_stone_amount_per_hole = 4
 		self.board = BoardData(self.player_side_length, self.initial_stone_amount_per_hole)
 
 	def loop(self):
-		current_player_id = 0
 		while not self.board.has_ended():
 			self.draw_board()
 			play = int(input())  # 1
 
 			# Traduzir o número pra qual buraco vamos usar
-			selected_hole = self.board.player_territories[current_player_id].player_side[play - 1]
+			selected_hole = self.board.player_territories[self.current_player_id].player_side[play - 1]
 			if not self.is_valid(play, selected_hole):
 				print("Errou parça")
 				continue
@@ -29,11 +30,21 @@ class Game:
 				continue
 			# Se parar num vazio, pega o atual e o espelhado do outro lado e soma no mancala
 			if last_hole.stone_amount == 1:
-				self.steal_from_opponent(last_hole, current_player_id)
+				self.steal_from_opponent(last_hole, self.current_player_id)
 
-			current_player_id += 1
-			if current_player_id >= self.player_count:
-				current_player_id = 0
+			self.current_player_id = self.get_next_player_id()
+
+	@staticmethod
+	def get_next_player_id(player_id):
+		return (player_id + 1) % Game.PLAYER_COUNT
+
+	def get_possible_moves(self, player_id):
+		moves = []
+		for i in range(0, self.player_side_length):
+			hole = self.board.player_territories[player_id].player_side[i]
+			if self.is_valid(i, hole):
+				moves.append(i)
+		return moves
 
 	def is_valid(self, play_number, selected_hole):
 		if play_number < 1 or play_number > self.player_side_length:
