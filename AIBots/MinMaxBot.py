@@ -6,12 +6,12 @@ import copy
 
 class MinMaxBot(Player):
     def __init__(self, bot_player_id):
-        self.max_depth = 3
+        self.max_depth = 5
         self.maximizing_player_id = bot_player_id
 
     def play(self, board):
         (play, score) = self.minimax(board, 0, True)
-        print(f"MinMaxBot played {play}")
+        print(f"MinMaxBot plays: {play}")
         return play
 
     def minimax(self, board, current_depth, current_player_id):

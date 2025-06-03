@@ -9,9 +9,11 @@ if __name__ == '__main__':
     initial_stone_amount_per_hole = 4
 
     players = [User(), MinMaxBot(1)]
+    print(f"Welcome to MancalAI, this match will be '{players[0].__class__.__name__}' vs '{players[1].__class__.__name__}'")
     board = BoardData(player_side_length, initial_stone_amount_per_hole)
     game = Game(board)
     while not game.board.has_ended():
+        print()
         game.draw_board()
 
         play = players[game.current_player_id].play(game.board)
