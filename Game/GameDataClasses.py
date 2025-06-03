@@ -1,4 +1,4 @@
-import MancalaUtils
+from Game.MancalaUtils import CyclicList
 
 
 class HoleData:
@@ -28,7 +28,7 @@ class BoardData:
 		self.player_territories = [PlayerTerritoryData(initial_stone_amount_per_hole, player_side_length, 0),
 									PlayerTerritoryData(initial_stone_amount_per_hole, player_side_length, 1)]
 
-		self.all_holes = MancalaUtils.CyclicList([])
+		self.all_holes = CyclicList([])
 		for player_territory in self.player_territories:
 			self.all_holes.extend(player_territory.player_side)
 			self.all_holes.append(player_territory.player_mancala)

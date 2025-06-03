@@ -1,4 +1,4 @@
-from GameDataClasses import BoardData
+from Game.GameDataClasses import BoardData
 
 
 class Game:
@@ -11,6 +11,7 @@ class Game:
 	def loop(self):
 		current_player_id = 0
 		while not self.board.has_ended():
+			self.draw_board()
 			play = int(input())  # 1
 			if not self.is_valid(play):
 				print("Errou parça")
@@ -49,3 +50,15 @@ class Game:
 
 	def steal_from_opponent(self, last_hole, current_player_id):
 		return
+
+	def draw_board(self):
+		top_row_str = [f"{hole.stone_amount:02d}" for hole in self.board.player_territories[1].player_side]
+		bottom_row_str = [f"{hole.stone_amount:02d}" for hole in self.board.player_territories[0].player_side]
+		left_pit_str = f"{self.board.player_territories[1].player_mancala.stone_amount:02d}"
+		right_pit_str = f"{self.board.player_territories[0].player_mancala.stone_amount:02d}"
+
+		print("|    --- " + " --- ".join(top_row_str) + " ---    |")
+		print(f"| {left_pit_str}{' ' * 47}{right_pit_str} |")
+		print("|    --- " + " --- ".join(bottom_row_str) + " ---    |")
+		return
+
