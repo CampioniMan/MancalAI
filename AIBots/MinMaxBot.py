@@ -4,8 +4,11 @@ import copy
 
 
 class MinMaxBot(Player):
-    def __init__(self):
-        self.max_depth = 5
+    def __init__(self, max_depth):
+        self.max_depth = max_depth
+
+    def get_title(self):
+        return f"MinMaxBot (depth={self.max_depth})"
 
     def play(self, board):
         (play, score) = self.minimax(board, 0, self.player_id)
