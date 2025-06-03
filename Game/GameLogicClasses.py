@@ -1,24 +1,12 @@
-from Game.GameDataClasses import BoardData
-
-
 class Game:
 	PLAYER_COUNT = 2
 
-	def __init__(self, player_01, player_02):
-		self.players = [player_01, player_02]
-		self.current_player_id = 0
-		self.player_side_length = 6
-		self.initial_stone_amount_per_hole = 4
-		self.board = BoardData(self.player_side_length, self.initial_stone_amount_per_hole)
+	def __init__(self, board, current_player_id=0):
+		self.current_player_id = current_player_id
+		self.board = board
 
-	### Returns True when the current player should keep playing afterwards
-	def play_round(self):
-		play = self.players[self.current_player_id].play(self.board)
-		if not self.is_valid(play):
-			print("Errou parça")
-			return True
-		play = int(play)
-
+	### Retorna True quando o usuário atual continua jogando depois dessa rodada, False caso contrário
+	def play_round(self, play):
 		# Traduzir o número pra qual buraco vamos usar
 		selected_hole = self.board.player_territories[self.current_player_id].player_side[play - 1]
 		# Zerar pedrinhas do primeiro
@@ -33,7 +21,7 @@ class Game:
 		if last_hole.stone_amount == 1:
 			self.steal_from_opponent(last_hole, self.current_player_id)
 
-		self.current_player_id = self.get_next_player_id(self.current_player_id)
+		self.current_player_id = Game.get_next_player_id(self.current_player_id)
 		return False
 
 	@staticmethod
@@ -49,13 +37,14 @@ class Game:
 				moves.append(i)
 		return moves
 
-	def is_valid(self, play_number):
-		if play_number is None or not play_number.isdigit():
+	@staticmethod
+	def is_valid(board, player_id, play_number):
+		if play_number is None or (isinstance(play_number, str) and not play_number.isdigit()):
 			return False
 		play_number = int(play_number)
-		if play_number < 1 or play_number > self.player_side_length:
+		if play_number < 1 or play_number > len(board.player_territories[player_id].player_side):
 			return False
-		return self.board.player_territories[self.current_player_id].player_side[play_number - 1].stone_amount > 0
+		return board.player_territories[player_id].player_side[play_number - 1].stone_amount > 0
 
 	def remove_stones_from_hole(self, selected_hole):
 		stones_removed = selected_hole.stone_amount
@@ -80,7 +69,7 @@ class Game:
 
 	def steal_from_opponent(self, last_hole, current_player_id):
 		last_hole_index = self.board.all_holes.index(last_hole)
-		opposite_index = 2 * self.player_side_length - last_hole_index
+		opposite_index = 2 * self.board.player_side_length - last_hole_index
 		opposite_hole = self.board.all_holes[opposite_index]
 		
 		if opposite_hole.owner_id == current_player_id or opposite_hole.stone_amount == 0:
@@ -106,7 +95,7 @@ class Game:
 	def print_winner(self):
 		player_01_score = self.board.player_territories[0].player_mancala.stone_amount
 		player_02_score = self.board.player_territories[1].player_mancala.stone_amount
-		print ("Game Over!")
+		print(f"Game Over!")
 		print(f"Player 1 Score: {player_01_score}")
 		print(f"Player 2 Score: {player_02_score}")
 		if player_01_score > player_02_score:

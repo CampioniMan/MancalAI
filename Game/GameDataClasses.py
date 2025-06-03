@@ -25,6 +25,7 @@ class PlayerTerritoryData:
 
 class BoardData:
 	def __init__(self, player_side_length, initial_stone_amount_per_hole):
+		self.player_side_length = player_side_length
 		self.player_territories = [PlayerTerritoryData(initial_stone_amount_per_hole, player_side_length, 0),
 									PlayerTerritoryData(initial_stone_amount_per_hole, player_side_length, 1)]
 

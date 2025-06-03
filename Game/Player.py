@@ -5,5 +5,5 @@ class Player:
 
 class User(Player):
 	def play(self, board):
-		play_number = int(input())
+		play_number = input()
 		return play_number
