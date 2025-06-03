@@ -32,7 +32,7 @@ class Game:
 			if last_hole.stone_amount == 1:
 				self.steal_from_opponent(last_hole, self.current_player_id)
 
-			self.current_player_id = self.get_next_player_id()
+			self.current_player_id = self.get_next_player_id(self.current_player_id)
 
 	@staticmethod
 	def get_next_player_id(player_id):
