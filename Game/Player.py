@@ -1,4 +1,6 @@
 class Player:
+	player_id = -1
+
 	def play(self, board):
 		pass
 

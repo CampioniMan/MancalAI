@@ -1,24 +1,22 @@
 from Game.GameLogicClasses import Game
-from Game.GameDataClasses import BoardData
 from Game.Player import Player
 import copy
 
 
 class MinMaxBot(Player):
-    def __init__(self, bot_player_id):
+    def __init__(self):
         self.max_depth = 5
-        self.maximizing_player_id = bot_player_id
 
     def play(self, board):
-        (play, score) = self.minimax(board, 0, True)
+        (play, score) = self.minimax(board, 0, self.player_id)
         print(f"MinMaxBot plays: {play}")
         return play
 
     def minimax(self, board, current_depth, current_player_id):
         if board.has_ended() or current_depth == self.max_depth:
-            return None, board.player_territories[self.maximizing_player_id].get_total_stone_count()
+            return None, board.player_territories[self.player_id].get_total_stone_count()
 
-        if current_player_id == self.maximizing_player_id:
+        if current_player_id == self.player_id:
             best_play = None
             best_score = -float('inf')
             for move in Game.get_possible_moves(board, current_player_id):

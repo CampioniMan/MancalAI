@@ -34,7 +34,7 @@ class Game:
 		for i in range(0, len(board.player_territories[player_id].player_side)):
 			hole = board.player_territories[player_id].player_side[i]
 			if hole.stone_amount > 0:
-				moves.append(i)
+				moves.append(i + 1)
 		return moves
 
 	@staticmethod
@@ -93,8 +93,8 @@ class Game:
 		return
 
 	def print_winner(self):
-		player_01_score = self.board.player_territories[0].player_mancala.stone_amount
-		player_02_score = self.board.player_territories[1].player_mancala.stone_amount
+		player_01_score = self.board.player_territories[0].get_total_stone_count()
+		player_02_score = self.board.player_territories[1].get_total_stone_count()
 		print(f"Game Over!")
 		print(f"Player 1 Score: {player_01_score}")
 		print(f"Player 2 Score: {player_02_score}")
