@@ -62,7 +62,7 @@ class Game:
 		return
 
 	def draw_board(self):
-		top_row_str = [f"{hole.stone_amount:02d}" for hole in self.board.player_territories[1].player_side]
+		top_row_str = [f"{hole.stone_amount:02d}" for hole in self.board.player_territories[1].player_side[::-1]]
 		bottom_row_str = [f"{hole.stone_amount:02d}" for hole in self.board.player_territories[0].player_side]
 		left_pit_str = f"{self.board.player_territories[1].player_mancala.stone_amount:02d}"
 		right_pit_str = f"{self.board.player_territories[0].player_mancala.stone_amount:02d}"
