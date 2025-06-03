@@ -13,12 +13,12 @@ class Game:
 		while not self.board.has_ended():
 			self.draw_board()
 			play = int(input())  # 1
-			if not self.is_valid(play):
-				print("Errou parça")
-				continue
 
 			# Traduzir o número pra qual buraco vamos usar
 			selected_hole = self.board.player_territories[current_player_id].player_side[play - 1]
+			if not self.is_valid(play, selected_hole):
+				print("Errou parça")
+				continue
 			# Zerar pedrinhas do primeiro
 			stone_amount = self.remove_stones_from_hole(selected_hole)
 			# Ir passando 1 por 1 (pular o mancala oponente) adicionando essa quantidade que tinha
@@ -35,15 +35,17 @@ class Game:
 			if current_player_id >= self.player_count:
 				current_player_id = 0
 
-	def is_valid(self, play_number):
-		return
+	def is_valid(self, play_number, selected_hole):
+		if play_number < 1 or play_number > self.player_side_length:
+			return False
+		return selected_hole.stone_amount > 0
 
 	def remove_stones_from_hole(self, selected_hole):
-
 		return
 
 	def get_next_hole(self, selected_hole):
-		return
+		current_index = self.board.all_holes.index(selected_hole)
+		return self.board.all_holes[current_index + 1]
 
 	def pass_stones_around(self, stone_amount, next_hole):
 		return
