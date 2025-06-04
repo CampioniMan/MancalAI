@@ -1,6 +1,7 @@
 from Game.GameLogicClasses import Game
 from Game.Player import Player
 import copy
+import random
 
 
 class MinMaxBot(Player):
@@ -11,11 +12,11 @@ class MinMaxBot(Player):
         return f"MinMaxBot (depth={self.max_depth})"
 
     def play(self, board):
-        (play, score) = self.minimax(board, 0, self.player_id)
+        (play, score) = self.minmax(board, 0, self.player_id)
         print(f"MinMaxBot plays: {play}")
         return play
 
-    def minimax(self, board, current_depth, current_player_id):
+    def minmax(self, board, current_depth, current_player_id):
         if board.has_ended() or current_depth == self.max_depth:
             return None, board.player_territories[self.player_id].get_total_stone_count()
 
@@ -24,8 +25,8 @@ class MinMaxBot(Player):
             best_score = -float('inf')
             for move in Game.get_possible_moves(board, current_player_id):
                 (new_board, next_player) = self.make_move(board, current_player_id, move)
-                (play, score) = self.minimax(new_board, current_depth + 1, next_player)
-                if score > best_score:
+                (play, score) = self.minmax(new_board, current_depth + 1, next_player)
+                if score > best_score or (score == best_score and random.uniform(0, 1) > 0.5):
                     best_play = move
                     best_score = score
             return best_play, best_score
@@ -34,8 +35,8 @@ class MinMaxBot(Player):
             best_score = float('inf')
             for move in Game.get_possible_moves(board, current_player_id):
                 (new_board, next_player) = self.make_move(board, current_player_id, move)
-                (play, score) = self.minimax(new_board, current_depth + 1, next_player)
-                if score < best_score:
+                (play, score) = self.minmax(new_board, current_depth + 1, next_player)
+                if score < best_score or (score == best_score and random.uniform(0, 1) > 0.5):
                     best_play = move
                     best_score = score
             return best_play, best_score
