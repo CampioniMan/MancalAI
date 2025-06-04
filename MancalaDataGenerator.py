@@ -29,15 +29,15 @@ parser.add_argument("--bot_1_depth", "-b1", help="Depth of the first MinMaxBot (
 parser.add_argument("--bot_2_depth", "-b2", help="Depth of the second MinMaxBot (default is 6).", type=int, required=False, default=6)
 args = parser.parse_args()
 
+player_side_length = 6
+initial_stone_amount_per_hole = 4
+
+players = [MinMaxBot(args.bot_1_depth), MinMaxBot(args.bot_2_depth)]
+for i in range(0, len(players)):
+    players[i].player_id = i
+
 for i in range(args.count):
     gathered_data = []
-
-    player_side_length = 6
-    initial_stone_amount_per_hole = 4
-
-    players = [MinMaxBot(args.bot_1_depth), MinMaxBot(args.bot_2_depth)]
-    for i in range(0, len(players)):
-        players[i].player_id = i
     print(f"Generating training data from bots: '{players[0].get_title()}' and '{players[1].get_title()}'")
 
     board = BoardData(player_side_length, initial_stone_amount_per_hole)

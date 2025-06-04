@@ -13,7 +13,6 @@ class MinMaxBot(Player):
 
     def play(self, board):
         (play, score) = self.minmax(board, 0, self.player_id)
-        print(f"MinMaxBot plays: {play}")
         return play
 
     def minmax(self, board, current_depth, current_player_id):
