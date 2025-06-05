@@ -21,7 +21,7 @@ if __name__ == '__main__':
 
         play = players[game.current_player_id].play(game.board)
         while not Game.is_valid(game.board, game.current_player_id, play):
-            print("Errou parça, tenta de novo")
+            print(f"Try again, the play '{play}' isn't a valid option.")
             play = players[game.current_player_id].play(game.board)
         play = int(play)
 
