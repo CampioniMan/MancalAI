@@ -87,7 +87,7 @@ for i in range(args.count):
 
 	crc = get_data_crc32(gathered_data)
 
-	filename = f"Data/MinMax_vs_Random/{crc}.json"
+	filename = f"Data/Random_vs_MinMax6/{crc}.json"
 
 	if os.path.exists(filename):
 		print("This game was already generated before")
