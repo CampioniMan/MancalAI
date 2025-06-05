@@ -86,7 +86,7 @@ for i in range(args.count):
 
 	if os.path.exists(filename):
 		print("This game was already generated before")
-		exit(0)
+		continue
 
 	with open(filename, 'w') as f:
 		for state_vector, player_id, move in gathered_data:
