@@ -23,7 +23,7 @@ class MinMaxBot(Player):
                 return None
 
             with Pool(processes=num_processes) as pool:
-                multiple_results = [pool.apply_async(MinMaxBot.minmax_threaded, (copy.deepcopy(board), 1, copy.copy(self.player_id), copy.copy(self.player_id), copy.copy(self.max_depth), possibility)) for possibility in possibilities]
+                multiple_results = [pool.apply_async(MinMaxBot.minmax_threaded, (board, 1, copy.copy(self.player_id), copy.copy(self.player_id), copy.copy(self.max_depth), possibility)) for possibility in possibilities]
                 results = [res.get(timeout=10) for res in multiple_results]
 
                 best_play = None
