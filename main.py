@@ -25,7 +25,7 @@ if __name__ == '__main__':
             play = players[game.current_player_id].play(game.board)
         play = int(play)
 
-        print(f"Player '{players[game.current_player_id].get_title()}' plays: {play}")
+        print(f"Player '{players[game.current_player_id].get_title()}' (id={game.current_player_id:02d}) plays: {play}")
         game.play_round(play)
     game.draw_board()
     game.print_winner()
