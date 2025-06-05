@@ -9,7 +9,7 @@ if __name__ == '__main__':
     player_side_length = 6
     initial_stone_amount_per_hole = 4
 
-    players = [RandomBot(), MinMaxBot(6)]
+    players = [MinMaxBot(6), MinMaxBot(6)]
     for i in range(0, len(players)):
         players[i].player_id = i
     print(f"Welcome to MancalAI, this match will be '{players[0].get_title()}' vs '{players[1].get_title()}'")

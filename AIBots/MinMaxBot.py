@@ -24,7 +24,7 @@ class MinMaxBot(Player):
 
             with Pool(processes=num_processes) as pool:
                 multiple_results = [pool.apply_async(MinMaxBot.minmax_threaded, (board, 1, copy.copy(self.player_id), copy.copy(self.player_id), copy.copy(self.max_depth), possibility)) for possibility in possibilities]
-                results = [res.get(timeout=10) for res in multiple_results]
+                results = [res.get(timeout=60) for res in multiple_results]
 
                 best_play = None
                 best_score = -float('inf')
@@ -52,7 +52,7 @@ class MinMaxBot(Player):
             for move in Game.get_possible_moves(board, current_player_id):
                 (new_board, next_player) = MinMaxBot.make_move(board, current_player_id, move)
                 (play, score) = MinMaxBot.minmax(new_board, current_depth + 1, next_player, bot_player_id, max_depth)
-                if score > best_score:
+                if score > best_score or (score == best_score and random.uniform(0, 1) > 0.5):
                     best_play = move
                     best_score = score
             return best_play, best_score
@@ -62,7 +62,7 @@ class MinMaxBot(Player):
             for move in Game.get_possible_moves(board, current_player_id):
                 (new_board, next_player) = MinMaxBot.make_move(board, current_player_id, move)
                 (play, score) = MinMaxBot.minmax(new_board, current_depth + 1, next_player, bot_player_id, max_depth)
-                if score < best_score:
+                if score < best_score or (score == best_score and random.uniform(0, 1) > 0.5):
                     best_play = move
                     best_score = score
             return best_play, best_score
