@@ -71,8 +71,13 @@ for i in range(args.count):
 
 		if not isinstance(players[game.current_player_id], RandomBot):
 			gathered_data.append((get_board_state_vector(game.board), game.current_player_id, play))
+		else:
+			minmax_bot = MinMaxBot(6)
+			minmax_play = int(minmax_bot.play(game.board))
+			gathered_data.append((get_board_state_vector(game.board), game.current_player_id, minmax_play))
 
 		game.play_round(play)
+	print()
 	game.draw_board()
 	game.print_winner()
 
@@ -82,7 +87,7 @@ for i in range(args.count):
 
 	crc = get_data_crc32(gathered_data)
 
-	filename = f"Data/{crc}.json"
+	filename = f"Data/MinMax_vs_Random/{crc}.json"
 
 	if os.path.exists(filename):
 		print("This game was already generated before")
