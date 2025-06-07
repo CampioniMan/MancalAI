@@ -3,13 +3,16 @@ from Game.GameDataClasses import BoardData
 from Game.Player import User
 from AIBots.MinMaxBot import MinMaxBot
 from AIBots.RandomBot import RandomBot
+from AIBots.SmallNeuralNetworkBot import SmallNeuralNetworkBot
 
 
 if __name__ == '__main__':
     player_side_length = 6
     initial_stone_amount_per_hole = 4
 
-    players = [MinMaxBot(6), MinMaxBot(6)]
+    players = [
+        SmallNeuralNetworkBot("Data/Models/SmallNeuralNetworkBot/l1.384544_a0.392210_e1000.keras"),
+        RandomBot()]
     for i in range(0, len(players)):
         players[i].player_id = i
     print(f"Welcome to MancalAI, this match will be '{players[0].get_title()}' vs '{players[1].get_title()}'")
@@ -27,5 +30,6 @@ if __name__ == '__main__':
 
         print(f"Player '{players[game.current_player_id].get_title()}' (id={game.current_player_id:02d}) plays: {play}")
         game.play_round(play)
+    print()
     game.draw_board()
     game.print_winner()

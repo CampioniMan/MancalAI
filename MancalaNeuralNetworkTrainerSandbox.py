@@ -14,6 +14,7 @@ for folder_path in folder_paths:
     all_files.extend(get_all_files_pathlib(folder_path))
 
 bot = SmallNeuralNetworkBot()
+bot.verbose = 1
 epoch_count = 10
 trainer = Trainer()
 trainer.load_data(all_files)

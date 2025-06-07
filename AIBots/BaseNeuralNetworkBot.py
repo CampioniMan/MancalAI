@@ -1,11 +1,15 @@
 from Game.Player import Player
+from Game.GameLogicClasses import Game
 from sklearn.model_selection import train_test_split
 import numpy as np
 import json
+import os
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 
 
 class BaseNeuralNetworkBot(Player):
 	model = None  # Defined in each inherited class
+	verbose = 0
 
 	def get_title(self):
 		pass
@@ -13,8 +17,16 @@ class BaseNeuralNetworkBot(Player):
 	def play(self, board):
 		state_vector = board.get_board_state_vector()
 		state_vector.append(self.player_id)
-		predictions = self.model.predict(state_vector)
-		return np.argmax(predictions)
+		reshaped_input_data = np.array(state_vector).reshape(1, 15)
+		predictions = self.model.predict(reshaped_input_data, verbose=self.verbose)[0]
+
+		possibilities = Game.get_possible_moves(board, self.player_id)
+		for _ in predictions:
+			best_play = np.argmax(predictions)
+			if best_play+1 in possibilities:
+				return best_play+1
+			predictions[best_play] = -1
+		return None
 
 	def train(self, epoch_count, train_x_data, train_y_data, test_x_data, test_y_data):
 		return self.model.fit(train_x_data, train_y_data,
