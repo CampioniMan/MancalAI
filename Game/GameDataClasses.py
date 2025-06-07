@@ -39,3 +39,9 @@ class BoardData:
 			if player_territory.get_side_stone_count() == 0:
 				return True
 		return False
+
+	def get_board_state_vector(self) -> list[int]:
+		state_vector = []
+		for hole in self.all_holes:
+			state_vector.append(hole.stone_amount)
+		return state_vector
