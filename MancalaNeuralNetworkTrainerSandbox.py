@@ -20,6 +20,6 @@ trainer.load_data(all_files)
 history = trainer.train_model(bot, epoch_count)
 print("Training ended")
 
-file_name = f"Data/Models/SmallNeuralNetworkBot/l{history.history['loss'][-1]:.6f}_a{history.history['val_accuracy'][-1]:.6f}_e{epoch_count}.keras"
+file_name = f"Data/Models/SmallNeuralNetworkBot/l{history.history['val_loss'][-1]:.6f}_a{history.history['val_accuracy'][-1]:.6f}_e{epoch_count}.keras"
 bot.model.save(file_name)
 print(f"Model saved at {file_name}")
