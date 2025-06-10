@@ -1,6 +1,7 @@
 from Game.Player import Player
 from Game.GameLogicClasses import Game
 from sklearn.model_selection import train_test_split
+from keras.callbacks import EarlyStopping
 import numpy as np
 import json
 import os
@@ -29,9 +30,16 @@ class BaseNeuralNetworkBot(Player):
 		return None
 
 	def train(self, epoch_count, train_x_data, train_y_data, test_x_data, test_y_data):
+		early_stopping_callback = EarlyStopping(
+			monitor='val_loss',
+			patience=35,
+			verbose=1,
+			restore_best_weights=True
+		)
 		return self.model.fit(train_x_data, train_y_data,
 							epochs=epoch_count,
-							validation_data=(test_x_data, test_y_data))
+							validation_data=(test_x_data, test_y_data),
+							callbacks=early_stopping_callback)
 
 	def evaluate(self, test_x_data, test_y_data) -> (float, float):  # loss and accuracy
 		return self.model.evaluate(test_x_data, test_y_data, verbose=2)
@@ -52,6 +60,7 @@ class Trainer:
 					x.append(data_s["p"])
 					self.all_data_x.append(x)
 					self.all_data_y.append(data_s["m"]-1)
+		print(f"Loaded {len(self.all_data_x)} data points")
 
 	def get_training_data_split(self):
 		return train_test_split(

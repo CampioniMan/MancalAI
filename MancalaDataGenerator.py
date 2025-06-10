@@ -88,7 +88,11 @@ if __name__ == '__main__':
 
 		crc = get_data_crc32(gathered_data)
 
-		filename = f"Data/Random_vs_Random/{crc}.json"
+		dir_path = f"Data/{players[0].get_title()}_vs_{players[1].get_title()}"
+		if not os.path.exists(dir_path):
+			os.mkdir(dir_path)
+
+		filename = f"{dir_path}/{crc}.json"
 
 		if os.path.exists(filename):
 			print("This game was already generated before")

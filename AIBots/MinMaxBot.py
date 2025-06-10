@@ -10,10 +10,10 @@ class MinMaxBot(Player):
         self.max_depth = max_depth
 
     def get_title(self):
-        return f"MinMaxBot (depth={self.max_depth})"
+        return f"MinMaxBot{self.max_depth}"
 
     def play(self, board):
-        if self.max_depth <= 4:
+        if self.max_depth <= 5:
             (play, score) = MinMaxBot.minmax(board, 0, self.player_id, self.player_id, self.max_depth)
             return play
         else:
@@ -29,7 +29,7 @@ class MinMaxBot(Player):
                 best_play = None
                 best_score = -float('inf')
                 for play, score in results:
-                    if score > best_score:
+                    if score > best_score or (score == best_score and random.uniform(0, 1) > 0.5):
                         best_play = play
                         best_score = score
 
