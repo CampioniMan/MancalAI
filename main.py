@@ -15,9 +15,10 @@ if __name__ == '__main__':
     tie = 0
 
     players = [
-        #SmallNeuralNetworkBot("Data/Models/BigNeuralNetworkBot/l1.286234_a0.491005_e100.keras"),
-        MancalaFocusedMinMaxBot(5),
-        MinMaxBot(5)]
+        SmallNeuralNetworkBot("Data/Models/BigNeuralNetworkBot/l1.286234_a0.491005_e100.keras"),
+        MancalaFocusedMinMaxBot(1),
+        #MinMaxBot(6)
+    ]
     for i in range(0, len(players)):
         players[i].player_id = i
 

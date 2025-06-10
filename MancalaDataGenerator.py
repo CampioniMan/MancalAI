@@ -4,6 +4,7 @@ from Game.GameDataClasses import BoardData
 from Game.Player import User
 from AIBots.MinMaxBot import MinMaxBot
 from AIBots.RandomBot import RandomBot
+from AIBots.MancalaFocusedMinMaxBot import MancalaFocusedMinMaxBot
 import json
 import zlib
 import os
@@ -31,11 +32,13 @@ if __name__ == '__main__':
 	                    type=int)
 
 	first_bot_group = parser.add_mutually_exclusive_group(required=True)
-	first_bot_group.add_argument("--bot_1_depth", "-b1d", help="Depth of the first MinMaxBot.", type=int)
+	first_bot_group.add_argument("--bot_1_mm", "-b1mm", help="Depth of the first MinMaxBot.", type=int)
+	first_bot_group.add_argument("--bot_1_mfmm", "-b1mfmm", help="Depth of the first MancalaFocusedMinMaxBot.", type=int)
 	first_bot_group.add_argument("--bot_1_random", "-b1r", help="Sets the first bot as random (no data saved).", action='store_true')
 
 	second_bot_group = parser.add_mutually_exclusive_group(required=True)
-	second_bot_group.add_argument("--bot_2_depth", "-b2d", help="Depth of the second MinMaxBot.", type=int)
+	second_bot_group.add_argument("--bot_2_mm", "-b2mm", help="Depth of the second MinMaxBot.", type=int)
+	second_bot_group.add_argument("--bot_2_mfmm", "-b2mfmm", help="Depth of the second MancalaFocusedMinMaxBot.", type=int)
 	second_bot_group.add_argument("--bot_2_random", "-b2r", help="Sets the second bot as random (no data saved).", action='store_true')
 
 	args = parser.parse_args()
@@ -46,13 +49,17 @@ if __name__ == '__main__':
 	players = []
 	if args.bot_1_random:
 		players.append(RandomBot())
+	elif args.bot_1_mm:
+		players.append(MinMaxBot(args.bot_1_mm))
 	else:
-		players.append(MinMaxBot(args.bot_1_depth))
+		players.append(MancalaFocusedMinMaxBot(args.bot_1_mfmm))
 
 	if args.bot_2_random:
 		players.append(RandomBot())
+	elif args.bot_2_mm:
+		players.append(MinMaxBot(args.bot_2_mm))
 	else:
-		players.append(MinMaxBot(args.bot_2_depth))
+		players.append(MancalaFocusedMinMaxBot(args.bot_2_mfmm))
 
 	for i in range(0, len(players)):
 		players[i].player_id = i
