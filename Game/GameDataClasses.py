@@ -40,8 +40,15 @@ class BoardData:
 				return True
 		return False
 
-	def get_board_state_vector(self) -> list[int]:
+	def get_board_state_vector(self, normalize=False) -> list[int]:
 		state_vector = []
 		for hole in self.all_holes:
 			state_vector.append(hole.stone_amount)
+
+		if normalize:
+			max_possible_value = 44  # For a 6 side match
+			return [amount / max_possible_value for amount in state_vector]
 		return state_vector
+
+	def get_max_possible_points(self):
+		return sum([hole.stone_amount for hole in self.all_holes])

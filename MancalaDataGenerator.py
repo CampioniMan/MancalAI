@@ -80,7 +80,7 @@ if __name__ == '__main__':
 			if not isinstance(players[game.current_player_id], RandomBot):
 				gathered_data.append((get_board_state_vector(game.board), game.current_player_id, play))
 			else:
-				minmax_bot = MinMaxBot(5)
+				minmax_bot = MancalaFocusedMinMaxBot(5)
 				minmax_play = int(minmax_bot.play(game.board))
 				gathered_data.append((get_board_state_vector(game.board), game.current_player_id, minmax_play))
 

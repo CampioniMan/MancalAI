@@ -1,4 +1,5 @@
 from AIBots.BaseNeuralNetworkBot import BaseNeuralNetworkBot
+from AIBots.BaseNeuralNetworkBot import RangedClampNormalization
 import keras
 
 
@@ -6,6 +7,8 @@ class SmallNeuralNetworkBot(BaseNeuralNetworkBot):
 	def __init__(self, file_path=None):
 		if file_path is None:
 			self.model = keras.models.Sequential([
+				keras.layers.Input(shape=(15,)),
+				RangedClampNormalization(44, range(0, 14)),
 				keras.layers.Dense(15, activation='relu'),
 				keras.layers.Dropout(0.2),
 				keras.layers.Dense(30, activation='relu'),
