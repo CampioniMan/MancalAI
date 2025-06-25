@@ -7,6 +7,7 @@ import tensorflow as tf
 import numpy as np
 import json
 import os
+import keras
 
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 
@@ -32,15 +33,15 @@ class BaseNeuralNetworkBot(Player):
 			predictions[best_play] = -1
 		return None
 
-	def train(self, epoch_count, train_x_data, train_y_data, test_x_data, test_y_data):
+	def train(self, epoch_count, train_x_data, train_y_data, test_x_data, test_y_data, patience):
 		early_stopping_callback = EarlyStopping(
 			monitor='val_loss',
-			patience=3,
+			patience=patience,
 			verbose=1,
 			restore_best_weights=True
 		)
 		return self.model.fit(train_x_data, train_y_data,
-		                      batch_size=64,
+		                      batch_size=32,
 		                      epochs=epoch_count,
 		                      validation_data=(test_x_data, test_y_data),
 		                      callbacks=early_stopping_callback)
@@ -68,11 +69,11 @@ class Trainer:
 
 	def get_training_data_split(self):
 		return train_test_split(
-			np.array(self.all_data_x), np.array(self.all_data_y), test_size=self.test_data_percentage, random_state=94148)
+			np.array(self.all_data_x), np.array(self.all_data_y), test_size=self.test_data_percentage, random_state=48)
 
-	def train_model(self, bot: BaseNeuralNetworkBot, epoch_count):
+	def train_model(self, bot: BaseNeuralNetworkBot, epoch_count, patience):
 		x_train, x_test, y_train, y_test = self.get_training_data_split()
-		return bot.train(epoch_count, x_train, y_train, x_test, y_test)
+		return bot.train(epoch_count, x_train, y_train, x_test, y_test, patience)
 
 
 class RangedClampNormalization(Layer):
