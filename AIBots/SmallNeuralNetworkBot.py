@@ -18,7 +18,7 @@ class SmallNeuralNetworkBot(BaseNeuralNetworkBot):
 								loss='sparse_categorical_crossentropy',
 								metrics=['accuracy'])
 		else:
-			self.model = keras.models.load_model(file_path)
+			self.model = keras.models.load_model(file_path, custom_objects={'RangedClampNormalization': RangedClampNormalization})
 
 	def get_title(self):
 		return f"SmallNeuralNetworkBot"

@@ -64,8 +64,10 @@ if __name__ == '__main__':
 	for i in range(0, len(players)):
 		players[i].player_id = i
 
+	skipped_count = 0
 	for i in range(args.count):
 		gathered_data = []
+		print()
 		print(f"Generating training data from bots: '{players[0].get_title()}' and '{players[1].get_title()}'")
 
 		board = BoardData(player_side_length, initial_stone_amount_per_hole)
@@ -80,7 +82,8 @@ if __name__ == '__main__':
 			if not isinstance(players[game.current_player_id], RandomBot):
 				gathered_data.append((get_board_state_vector(game.board), game.current_player_id, play))
 			else:
-				minmax_bot = MancalaFocusedMinMaxBot(5)
+				minmax_bot = MancalaFocusedMinMaxBot(3)
+				minmax_bot.player_id = game.current_player_id
 				minmax_play = int(minmax_bot.play(game.board))
 				gathered_data.append((get_board_state_vector(game.board), game.current_player_id, minmax_play))
 
@@ -90,7 +93,8 @@ if __name__ == '__main__':
 		game.print_winner()
 
 		if len(gathered_data) == 0:
-			print("This game was useless. No data will be saved.")
+			skipped_count += 1
+			print(f"(#{i+1}) Data point {i + 1 - skipped_count} was useless. No data will be saved.")
 			continue
 
 		crc = get_data_crc32(gathered_data)
@@ -102,11 +106,13 @@ if __name__ == '__main__':
 		filename = f"{dir_path}/{crc}.json"
 
 		if os.path.exists(filename):
-			print("This game was already generated before")
+			skipped_count += 1
+			print(f"(#{i+1}) Data point {i + 1 - skipped_count} was already generated before ({skipped_count})")
 			continue
 
 		with open(filename, 'w') as f:
 			for state_vector, player_id, move in gathered_data:
 				record = {"sv": state_vector, "p": player_id, "m": move}
 				f.write(json.dumps(record) + '\n')
-		print(f"Data point {i + 1} saved to {filename}")
+		print(f"(#{i+1}) Data point {i + 1 - skipped_count} saved to {filename}")
+	print(f"Skipped a total of {skipped_count} data points.")
